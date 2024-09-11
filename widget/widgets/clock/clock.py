@@ -1,11 +1,11 @@
 from ...widget import DesktopWidget
 from ...properties import Properties
 from .settings import SettingsDialog
+from . import default
 from PyQt6.QtGui import QFont
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QLabel, QVBoxLayout, QDialog
 from datetime import datetime
-from . import default
 
 def callback(widget:DesktopWidget):
     current_time = datetime.now().strftime('%H:%M:%S')
@@ -22,7 +22,7 @@ def template(widget:DesktopWidget):
     widget.setLayout(layout)
     
 def settings_window(widget:DesktopWidget):
-    widget:QDialog = SettingsDialog(widget.label)
+    widget:QDialog = SettingsDialog(widget)
     widget.exec()
     
 clock = Properties(template, callback, settings_window)
