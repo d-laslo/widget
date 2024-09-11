@@ -1,1 +1,1 @@
-from .clock import clock
+from .clock.clock import clock
