@@ -25,7 +25,7 @@ class DesktopWidget(QWidget):
         self.timer.timeout.connect(self.__update_time)
         self.timer.start(1000)
         
-        self.setGeometry(1,1,1,1)
+        self.setGeometry(1,1,200,100)
         self.drag_position = None
         
     def __update_time(self):

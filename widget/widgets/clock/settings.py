@@ -3,6 +3,7 @@ from PyQt6.QtWidgets import (QFormLayout, QComboBox, QSpinBox, QPushButton, QDia
 from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import QApplication
 from PyQt6.QtGui import QCursor
+from PyQt6.QtCore import Qt
 from . import default
 
 class SettingsDialog(QDialog):
@@ -13,6 +14,9 @@ class SettingsDialog(QDialog):
         self.setWindowTitle('Font settings')
         self.setGeometry(QCursor.pos().x(), QCursor.pos().y(), 0, 0)
         self.setFixedSize(200,100)
+        
+        self.setWindowModality(Qt.WindowModality.ApplicationModal)
+        self.setWindowFlags(self.windowFlags() | Qt.WindowType.WindowStaysOnTopHint)
 
         self.fontComboBox = QComboBox(self)
         self.fontComboBox.addItems(default.font_families)
