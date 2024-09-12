@@ -9,6 +9,20 @@ import matplotlib.pyplot as plt
 import mplcyberpunk 
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 
+class CustomFigureCanvas(FigureCanvas):
+    def __init__(self, figure, parent):
+        super().__init__(figure)
+        self.parent = parent
+
+    def mousePressEvent(self, event):
+        self.parent.mousePressEvent(event)
+
+    def mouseReleaseEvent(self, event):
+        self.parent.mouseReleaseEvent(event)
+
+    def mouseMoveEvent(self, event):
+        self.parent.mouseMoveEvent(event)
+
 class CpuLoadGraph(Properties):
     def __init__(self, ):
         self.__data = [0] * 100
@@ -19,7 +33,7 @@ class CpuLoadGraph(Properties):
         self.update_graph()
     
     def init_widget_template(self, widget:DesktopWidget):
-        self.__canvas = FigureCanvas(self.__figure)
+        self.__canvas = CustomFigureCanvas(self.__figure, widget)
         layout = QVBoxLayout()
         layout.addWidget(self.__canvas)
         widget.setLayout(layout)
