@@ -1,19 +1,23 @@
-
-class Properties:    
-    def __init__(self, widget_template, callback = None, settings_window = None):
-        self.__widget_template = widget_template
-        self.__callback = callback
-        self.__settings_window = settings_window
-    
-    
-    @property
+from abc import ABC, abstractmethod
+from PyQt6.QtWidgets import QWidget
+class Properties(ABC):    
+    @abstractmethod
     def callback(self):
-        return self.__callback
+        pass
+    
+    @abstractmethod
+    def init_widget_template(self, widget:QWidget):
+        pass
+    
+    @abstractmethod
+    def settings_window(self, widget:QWidget):
+        pass
+    
+    @abstractmethod
+    def get_start_size(self):
+        pass
     
     @property
-    def widget_template(self):
-        return self.__widget_template
-    
-    @property
-    def settings_window(self):
-        return self.__settings_window
+    @abstractmethod
+    def is_resizable(self):
+        pass

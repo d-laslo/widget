@@ -9,45 +9,47 @@ import matplotlib.pyplot as plt
 import mplcyberpunk 
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 
-from threading import Thread
-
-def callback(widget:DesktopWidget):
-    cpu_load = psutil.cpu_percent(interval=1)
-    widget.data = widget.data[1:] + [cpu_load]
-
-    Thread(target=update_graph, args=(widget,), daemon=True).start()
-
-def update_graph(widget:DesktopWidget):
-    widget.ax.clear()
-    plt.style.use("cyberpunk")
-    widget.ax.set_facecolor('#2E2E2E')
-    widget.figure.patch.set_facecolor('#1C1C1C')
-
-    widget.ax.plot(widget.data, color='cyan', linewidth=2)
-    widget.ax.fill_between(range(len(widget.data)), widget.data, color='cyan', alpha=0.3)
-
-    widget.ax.set_ylim(0, 100)
-    widget.ax.set_xlim(0, len(widget.data) - 1)
+class CpuLoadGraph(Properties):
+    def __init__(self, ):
+        self.__data = [0] * 100
+        self.__figure, self.__ax = plt.subplots()
     
-    widget.ax.set_xticks([])
-    widget.ax.set_yticks([])
-
-    mplcyberpunk.add_glow_effects()
-    widget.figure.subplots_adjust(left=0, right=1, top=1, bottom=0)
-    widget.canvas.draw()
+    def callback(self):
+        self.__data = self.__data[1:] + [psutil.cpu_percent(interval=0)]
+        self.update_graph()
     
-def template(widget:DesktopWidget):
-    widget.data = [0] * 100
-
-    widget.figure, widget.ax = plt.subplots()
-    widget.canvas = FigureCanvas(widget.figure)
-    layout = QVBoxLayout()
-    layout.addWidget(widget.canvas)
-    widget.setLayout(layout)
+    def init_widget_template(self, widget:DesktopWidget):
+        self.__canvas = FigureCanvas(self.__figure)
+        layout = QVBoxLayout()
+        layout.addWidget(self.__canvas)
+        widget.setLayout(layout)
+        self.update_graph()
     
-    update_graph(widget)
+    def settings_window(self, widget:DesktopWidget):
+        pass
     
-def settings_window(widget:DesktopWidget):
-    pass
+    def get_start_size(self):
+        return 200,100
+    
+    @property
+    def is_resizable(self):
+        return True
 
-cpu_load_graph = Properties(template, callback, settings_window)
+    def update_graph(self):
+        self.__ax.clear()
+        plt.style.use("cyberpunk")        
+        self.__ax.set_facecolor((0.18, 0.18, 0.18, 0.1))
+        self.__figure.patch.set_facecolor((0.11, 0.11, 0.11, 0.1))
+
+        self.__ax.plot(self.__data, color='cyan', linewidth=2)
+        self.__ax.fill_between(range(len(self.__data)), self.__data, color='cyan', alpha=0.3)
+
+        self.__ax.set_ylim(0, 100)
+        self.__ax.set_xlim(0, len(self.__data) - 1)
+        
+        self.__ax.set_xticks([])
+        self.__ax.set_yticks([])
+
+        mplcyberpunk.add_glow_effects()
+        self.__figure.subplots_adjust(left=0, right=1, top=1, bottom=0)
+        self.__canvas.draw()
