@@ -17,7 +17,17 @@ class Properties(ABC):
     def get_start_size(self):
         pass
     
+    @abstractmethod
+    def stop(self):
+        pass
+    
     @property
     @abstractmethod
     def is_resizable(self):
+        pass
+    
+    @property
+    @abstractmethod
+    def frequency_update(self):
+        '''how often the widget should be updated (in milliseconds)'''
         pass

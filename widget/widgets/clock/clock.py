@@ -32,9 +32,16 @@ class Clock(Properties):
     def get_start_size(self):
         return 1,1
     
+    def stop(self):
+        pass
+    
     @property
     def is_resizable(self):
         return False
+    
+    @property
+    def frequency_update(self):
+        return 1000
     
     @property
     def label(self):

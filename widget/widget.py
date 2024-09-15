@@ -30,7 +30,7 @@ class DesktopWidget(QWidget):
 
         self.__timer = QTimer(self)
         self.__timer.timeout.connect(self.__update_time)
-        self.__timer.start(1000)
+        self.__timer.start(self.__properties.frequency_update)
     
     @property      
     def __allow_resize(self):
@@ -98,3 +98,7 @@ class DesktopWidget(QWidget):
         if not self.__allow_resize:
             return
         super().resizeEvent(event)
+        
+    def closeEvent(self, event):
+        self.__properties.stop()
+        super().closeEvent(event)
