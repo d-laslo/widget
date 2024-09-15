@@ -4,10 +4,11 @@ from PyQt6.QtWidgets import QVBoxLayout
 
 import psutil
 import matplotlib
-matplotlib.use('QtAgg')
+matplotlib.use('agg')
 import matplotlib.pyplot as plt
 import mplcyberpunk 
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
+from threading import Thread
 
 class CustomFigureCanvas(FigureCanvas):
     def __init__(self, figure, parent):
@@ -24,12 +25,18 @@ class CustomFigureCanvas(FigureCanvas):
         self.parent.mouseMoveEvent(event)
 
 class CpuLoadGraph(Properties):
-    def __init__(self, ):
+    def __init__(self, width=200, heigh=100, frequency_update = 1000):
         self.__data = [0] * 100
         self.__figure, self.__ax = plt.subplots()
+        self.__width = width
+        self.__heigh = heigh
+        self.__is_started = True
+        self.__frequency_update = frequency_update
+
+        self.__figure.set_size_inches(*self.__pixels_to_inches(self.__width, self.__heigh, self.__figure.dpi), True)
+        Thread(target=self.__update_cpu_data, daemon=True).start()
     
     def callback(self):
-        self.__data = self.__data[1:] + [psutil.cpu_percent(interval=0)]
         self.update_graph()
     
     def init_widget_template(self, widget:DesktopWidget):
@@ -43,11 +50,18 @@ class CpuLoadGraph(Properties):
         pass
     
     def get_start_size(self):
-        return 200,100
+        return self.__width, self.__heigh
+    
+    def stop(self):
+        self.__is_started = False
     
     @property
     def is_resizable(self):
         return True
+    
+    @property
+    def frequency_update(self):
+        return self.__frequency_update
 
     def update_graph(self):
         self.__ax.clear()
@@ -67,3 +81,10 @@ class CpuLoadGraph(Properties):
         mplcyberpunk.add_glow_effects()
         self.__figure.subplots_adjust(left=0, right=1, top=1, bottom=0)
         self.__canvas.draw()
+        
+    def __update_cpu_data(self):
+        while self.__is_started:
+            self.__data = self.__data[1:] + [psutil.cpu_percent(interval=(self.__frequency_update // 1000))]
+            
+    def __pixels_to_inches(self, width_px, height_px, dpi):
+        return width_px / dpi, height_px / dpi
