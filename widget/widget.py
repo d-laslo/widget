@@ -50,7 +50,7 @@ class DesktopWidget(QWidget):
             self.setFixedSize(self.width(), self.height())
 
     def __is_near_edge(self, pos):
-        margin = 10
+        margin = 30
         return pos.x() > self.width() - margin and pos.y() > self.height() - margin
 
     def mousePressEvent(self, event:QMouseEvent) -> None:            
