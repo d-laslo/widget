@@ -26,7 +26,7 @@ class CustomFigureCanvas(FigureCanvas):
 class CpuLoadGraph(Properties):
     __is_started = True
 
-    def __init__(self, width=200, heigh=100, frequency_update = 1000):
+    def __init__(self, width=200, heigh=100, frequency_update=1000):
         self.__data = [0] * 100
         self.__width = width
         self.__heigh = heigh
