@@ -112,7 +112,7 @@ class PriceGraph(Properties):
         self.__canvas.draw()
 
     def __update_graph(self):
-        self.__ax.set_ylim(min(self.__data)*0.999, max(self.__data)*1.001 + 1)
+        self.__ax.set_ylim(min(self.__data), max(self.__data))
         self.__line.set_ydata(self.__data)
         self.__canvas.draw()
         self.__canvas.flush_events()
@@ -120,6 +120,7 @@ class PriceGraph(Properties):
     def __on_message(self, ws, message):
         data = json.loads(message)['k']
         self.__data[-1] = float(data['c'])
+        print(self.__data)
         if data["x"]:
             self.__data = self.__data[1:] + [float(data['c'])]
     

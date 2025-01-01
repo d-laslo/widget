@@ -12,7 +12,7 @@ if __name__ == '__main__':
     # w2 = DesktopWidget(CpuLoadGraph())
     # w2.show()
 
-    w3 = DesktopWidget(PriceGraph(interval=PriceGraph.Interval._1m))
+    w3 = DesktopWidget(PriceGraph(interval=PriceGraph.Interval._1w))
     w3.show()
     
     sys.exit(app.exec())
